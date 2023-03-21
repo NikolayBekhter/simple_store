@@ -1,0 +1,28 @@
+<div>
+
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-normal mb-0 text-black">Страница авторизации</h3>
+            </div>
+            <div>
+                <form ng-submit="tryToAuth()">
+                    <div class="form-group">
+                        <label for="your_email">Электронная почта</label>
+                        <input type="text" class="form-control" id="your_email" placeholder="Электронная почта" ng-model="user.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Пароль</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Пароль" ng-model="user.password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Авторизоваться</button>
+                </form>
+                <td></td>
+                <div class="signin-image">
+                    <a href="#!/registration" class="signup-image-link">У меня нет аккаунта</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

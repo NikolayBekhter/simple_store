@@ -8,6 +8,10 @@
 
     <modules>
         <module>core-service</module>
+        <module>auth-service</module>
+        <module>gateway-service</module>
+        <module>front-service</module>
+        <module>cart-service</module>
     </modules>
 
 	<groupId>ru.nikbekhter.simple.store</groupId>

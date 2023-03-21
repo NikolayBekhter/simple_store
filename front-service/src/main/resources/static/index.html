@@ -1,0 +1,78 @@
+<!doctype html>
+
+<html ng-app="store">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/angular.ng-notify/0.6.0/ng-notify.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="icon" href="/front/favicon/index.ico" sizes="any">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/angular.ng-notify/0.6.0/ng-notify.min.js"></script>
+</head>
+
+<body>
+
+<div>
+    <div class="container" ng-controller="indexController">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: flex">
+                <ul class="navbar-nav mr-auto" style="flex-direction: row">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#!/">Главная</a>
+                    </li>
+                    &nbsp;
+                    <li class="nav-item" ng-show="isUserLoggedIn()">
+                        <a class="nav-link" href="#!/catalog">Каталог товаров</a>
+                    </li>
+                    &nbsp;
+                    <li class="nav-item" ng-show="isUserLoggedIn()">
+                        <a class="nav-link" href="#!/cart">Корзина</a>
+                    </li>
+                    &nbsp;
+                    <li class="nav-item" ng-show="isUserLoggedIn()">
+                        <a class="nav-link" href="#!/orders">Мои заказы</a>
+                    </li>
+                    <li class="nav-item" ng-show="showControl()">
+                        <a class="nav-link disabled" href="#!/admin">Управление</a>
+                    </li>
+                    <li class="nav-item" ng-show="isUserLoggedIn()">
+                        <a class="nav-link disabled" href="#!/lk">Личный кабинет</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item" ng-show="isUserLoggedIn()">
+                            <button class="btn btn-outline-secondary my-2 my-sm-0" ng-click="tryToLogout()">Выйти</button>
+                        </li>
+                        <li class="nav-item" ng-show="!isUserLoggedIn()">
+                            <a class="nav-link disabled" href="#!/auth">Авторизоваться</a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </nav>
+
+        <ng-view></ng-view>
+
+        <script src="index.js"></script>
+        <script src="cart/cart.js"></script>
+        <script src="orders/orders.js"></script>
+        <script src="regform/main.js"></script>
+        <script src="catalog/catalog.js"></script>
+        <script src="welcome/welcome.js"></script>
+        <script src="admin/admin.js"></script>
+        <script src="lk/lk.js"></script>
+
+    </div>
+</div>
+
+</body>
+
+</html>
