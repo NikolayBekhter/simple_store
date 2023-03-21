@@ -1,0 +1,51 @@
+<div>
+
+    <div class="h-100" style="background-color: #eee;">
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-4" ng-repeat="or in order |  limitTo: 1">
+                <h3 class="fw-normal mb-0 text-black">Список заказов пользователя {{or.username}}</h3>
+            </div>
+            <td></td>
+            <div class="accordion" id="accordionExample" ng-repeat="o in order">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne{{o.id}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <div class="d-flex">
+                                <div>Заказ #&nbsp{{o.id}}</div>
+                                <div class="px-5">Общая&nbsp;сумма: <nobr>{{o.totalPrice}}</nobr></div>
+                                <div class="px-5">Дата&nbsp;создания: <nobr>{{o.createdAt}}</nobr></div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapseOne{{o.id}}" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <div class="d-flex">
+                            <div>
+                                <div class="px-5" item-title>Название&nbsp;товара</div>
+                                <div class="px-5">Колличество</div>
+                                <div class="px-5">Стоимость</div>
+                                <div class="px-5">Общая&nbsp;стоимость</div>
+                            </div>
+                            <div class="accordion-body" ng-repeat="i in o.items">
+                                <div class="px-5" item-title><strong>{{i.productTitle}}</strong></div>
+                                <div class="px-5"><span></span>{{i.quantity}}</div>
+                                <div class="px-5"><span></span>{{i.pricePerProduct}}</div>
+                                <div class="px-5"><span></span>{{i.price}}</div>
+                            </div>
+                        </div>
+                        <div class="px-5">
+                            <button class="btn btn-danger" ng-click="deleteOrder(o.id)">Удалить заказ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <button type="button" class="btn btn-warning btn-block btn-lg" ng-click="">Перейти к оплате</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,88 @@
+<div>
+
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-normal mb-0 text-black">Каталог товаров</h3>
+            </div>
+            <div class="card-body p-4">
+                <div>
+                    <form novalidate ng-submit="loadProducts()">
+                        <div class="form-floating input-group-sm">
+                            <input type="text" class="form-control" id="filterTitle" placeholder=""
+                                   ng-model="filter.title_part">
+                            <label for="filterTitle">Название продукта</label>
+                        </div>
+                        <p></p>
+                        <div class="form-floating input-group-sm">
+                            <input type="text" class="form-control" id="filterOrgTitle" placeholder=""
+                                   ng-model="filter.org_title_part">
+                            <label for="filterOrgTitle">Название организации</label>
+                        </div>
+                        <p></p>
+                        <div class="form-floating input-group-sm">
+                            <input type="number" class="form-control" id="filterMinCost" placeholder=""
+                                   ng-model="filter.min_cost">
+                            <label for="filterMinCost">Минимальная цена</label>
+                        </div>
+                        <p></p>
+                        <div class="form-floating input-group-sm">
+                            <input type="number" class="form-control" id="filterMaxCost" placeholder=""
+                                   ng-model="filter.max_cost">
+                            <label for="filterMaxCost">Максимальная цена</label>
+                        </div>
+                        <p></p>
+                        <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Применить
+                        </button>
+                    </form>
+                    <p></p>
+                    <table class="table table-hover" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>ID</td>
+                            <td>Название продукта</td>
+                            <td>Описание</td>
+                            <td>Организация</td>
+                            <td>Цена</td>
+                            <td>Колличество</td>
+                            <td>Действие</td>
+                        </tr>
+                        <tbody>
+                        <tr ng-repeat="p in ProductPage.items">
+                            <td>{{p.id}}</td>
+                            <td>{{p.title}}</td>
+                            <td>{{p.description}}</td>
+                            <td>{{p.organizationTitle}}</td>
+                            <td>{{p.price}}</td>
+                            <td>{{p.quantity}}</td>
+                            <td>
+                                <button class="btn btn-primary" ng-click="showProductInfo(p.id)">Инфо</button>
+                                <!--                <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Удалить</button>-->
+                                <button class="btn btn-success" ng-click="sendToCart(p.id)">Добавить в корзину
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation" ng-show="isThereIndex()">
+                        <ul class="pagination">
+                            <li class="page-item" ng-show="ProductPage.page != 0">
+                                <button class="page-link" ng-click="previousPage(ProductPage.page, 0)"
+                                        aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+                            <li class="page-item" ng-repeat="pageIndex in pagesList">
+                                <button class="page-link" ng-click="loadProducts(pageIndex)">{{pageIndex}}</button>
+                            </li>
+                            <li class="page-item" ng-show="ProductPage.page != (indexNumber - 1)">
+                                <button class="page-link" ng-click="nextPage(ProductPage.page, 2)" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

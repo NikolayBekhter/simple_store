@@ -1,0 +1,67 @@
+<div>
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-normal mb-0 text-black">Корзина</h3>
+                <div>
+                    <p class="mb-0"><span class="text-muted">Сортировка :</span> <a href="#!" class="text-body"> по цене
+                        <i class="fas fa-angle-down mt-1"></i></a></p>
+                </div>
+            </div>
+            <div>
+                <div class="row g-2">
+                    <div class="col-sm-6 col-md-10">
+                        <table class="table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td>Название продукта</td>
+                                <td>Колличество</td>
+                                <td>Цена</td>
+                                <td>Действие</td>
+                            </tr>
+                            <tbody>
+                            <tr ng-repeat="c in cart.items">
+                                <td>{{c.productTitle}}</td>
+                                <td>
+                                    <nobr>
+                                        <button class="btn btn-primary"
+                                                ng-click="changeQuantity(c.productId, -1)">-
+                                        </button>
+                                        {{c.quantity}}
+                                        <button class="btn btn-primary"
+                                                ng-click="changeQuantity(c.productId, +1)">+
+                                        </button>
+                                    </nobr>
+                                </td>
+                                <td>{{c.pricePerProduct + ' x ' + c.quantity + ' = ' + c.price}}</td>
+                                <td>
+                                    <button class="btn btn-danger"
+                                            ng-click="deleteFromCart(c.productId)">Удалить из
+                                        корзины
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Итого</td>
+                                <td></td>
+                                <td>{{cart.totalCost}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-danger" ng-click="clearCart()">Очистить
+                                        корзину
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <button type="button" class="btn btn-warning btn-block btn-lg" ng-click="createOrder()">Создать заказ</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
