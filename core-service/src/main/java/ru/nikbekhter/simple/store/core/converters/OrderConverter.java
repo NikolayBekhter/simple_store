@@ -21,6 +21,7 @@ public class OrderConverter {
                 .map(orderItemConverter::entityToDto)
                 .collect(Collectors.toList()));
         orderDto.setTotalPrice(order.getTotalPrice());
+        orderDto.setStatus(order.isStatus());
         orderDto.setCreatedAt(order.getCreatedAt().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
         return orderDto;
     }

@@ -16,6 +16,7 @@ public class ProductDto {
     private String organizationTitle;
     private BigDecimal price;
     private int quantity;
+    private boolean isConfirmed;
     private Discount discount;
     private Review review;
 }

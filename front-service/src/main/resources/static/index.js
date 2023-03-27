@@ -124,6 +124,7 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
             }
         }).then(function (response) {
             $scope.ProductPage = response.data;
+            console.log(response.data);
             $scope.indexNumber = $scope.ProductPage.totalPages;
             $scope.generatePagesList($scope.ProductPage.totalPages);
         });
@@ -161,6 +162,18 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
             .then(function (response) {
                 alert(response.data.title + ' ' + response.data.organizationTitle);
             });
+    };
+
+    $rootScope.showUserBalance = function () {
+        $http.get(contextPath + 'users')
+            .then(function (response) {
+                let user = response.data;
+                $scope.userBalance = user.balance;
+            })
+    };
+
+    $rootScope.showUser = function () {
+        return $scope.userBalance;
     };
 
 });

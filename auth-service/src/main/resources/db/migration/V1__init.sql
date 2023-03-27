@@ -4,7 +4,8 @@ create table users
     email       varchar(255) unique,
     password    varchar(80) not null,
     username    varchar(36),
-    balance     numeric(10, 2)
+    balance     numeric(10, 2),
+    is_active   boolean
 );
 
 create table roles
@@ -20,8 +21,8 @@ create table users_roles
     primary key (user_id, role_id)
 );
 
-insert into users (email, password, username, balance) values
-    ('n.v.bekhter@mail.ru', '$2a$12$8jJ2aWY1jYu2fUTib.Ovuu7uiiodaPzHHExOSP9Ykm.lafgse9gim', 'Kolya', 100000);
+insert into users (email, password, username, balance, is_active) values
+    ('n.v.bekhter@mail.ru', '$2a$12$8jJ2aWY1jYu2fUTib.Ovuu7uiiodaPzHHExOSP9Ykm.lafgse9gim', 'Kolya', 100000, true);
 
 insert into roles (name) values
                              ('ROLE_USER'), ('ROLE_ADMIN');
@@ -74,6 +75,7 @@ create table products
     quantity           integer,
     title              varchar(255),
     organization       bigint,
+    is_confirmed       boolean,
     discount_id        bigint references discounts(id),
     review_id          bigint references reviews(id),
     constraint fk_cat_id foreign key (organization) references organizations (id)
@@ -86,6 +88,7 @@ create table orders
     total_price numeric(8, 2),
     address     varchar(255),
     phone       varchar(255),
+    status      boolean,
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp
 );
@@ -100,4 +103,14 @@ create table order_items
     price        numeric(8, 2) not null ,
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp
+);
+
+create table purchase_history
+(
+    id              bigserial primary key,
+    email           varchar(255),
+    product_title   varchar(255),
+    organization    varchar(255),
+    quantity        int not null ,
+    date_purchase   timestamp default current_timestamp
 );

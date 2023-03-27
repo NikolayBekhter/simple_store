@@ -18,16 +18,18 @@ public class Cart {
     }
 
     public void add(ProductDto product) {
-        for (CartItem item :
-                items) {
-            if (product.getId().equals(item.getProductId())) {
-                item.changeQuantity(1);
-                recalculate();
-                return;
+        if (product.getQuantity() != 0) {
+            for (CartItem item :
+                    items) {
+                if (product.getId().equals(item.getProductId())) {
+                    item.changeQuantity(1);
+                    recalculate();
+                    return;
+                }
             }
+            items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
+            recalculate();
         }
-        items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
-        recalculate();
     }
 
     public void remove(Long productId) {

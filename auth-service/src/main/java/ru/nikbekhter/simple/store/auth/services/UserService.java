@@ -33,8 +33,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found.", email)));
-            return new org.springframework.security.core.userdetails
-                    .User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails
+                .User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
@@ -67,4 +67,36 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User payment(User user, BigDecimal totalPrice) {
+        user.setBalance(user.getBalance().subtract(totalPrice));
+        return userRepository.save(user);
+    }
+
+    public void receivingProfit(UserDto userDto) {
+        User owner = userRepository.findByEmailIgnoreCase(userDto.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + userDto.getEmail() + " не найден!"));
+        User admin = userRepository.findByEmailIgnoreCase("n.v.bekhter@mail.ru").get();
+        owner.setBalance(owner.getBalance().add(userDto.getBalance().subtract(userDto.getBalance().multiply(new BigDecimal("0.05")))));
+        admin.setBalance(admin.getBalance().add(userDto.getBalance().multiply(new BigDecimal("0.05"))));
+        userRepository.save(admin);
+        userRepository.save(owner);
+    }
+
+    public User upBalance(UserDto userDto) {
+        User user = userRepository.findByEmailIgnoreCase(userDto.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + userDto.getEmail() + " не найден!"));
+        user.setBalance(user.getBalance().add(userDto.getBalance()));
+        return userRepository.save(user);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public void userBun(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id: " + id + " не найден!"));
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
 }

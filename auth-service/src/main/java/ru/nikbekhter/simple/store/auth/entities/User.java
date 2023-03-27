@@ -34,6 +34,9 @@ public class User {
     @Column(name = "balance")
     private BigDecimal balance;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

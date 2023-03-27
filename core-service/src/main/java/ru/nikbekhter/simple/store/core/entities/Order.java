@@ -25,7 +25,7 @@ public class Order {
     @Column(name = "username")
     private String username;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> items;
 
     @Column(name = "address")
@@ -36,6 +36,9 @@ public class Order {
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Column(name = "status")
+    private boolean status;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

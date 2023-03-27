@@ -32,7 +32,6 @@ public class CartService {
         if (!carts.containsKey(targetUuid)) {
             carts.put(targetUuid, new Cart());
         }
-        System.out.println("getCurrentCart--------------" + carts);
         return carts.get(targetUuid);
     }
 

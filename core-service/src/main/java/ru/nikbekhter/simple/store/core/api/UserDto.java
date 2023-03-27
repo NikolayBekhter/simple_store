@@ -1,17 +1,17 @@
-package ru.nikbekhter.simple.store.auth.api;
+package ru.nikbekhter.simple.store.core.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
-    private Long id;
     private String email;
-    private String password;
-    private String username;
     private BigDecimal balance;
-    private boolean active;
 }

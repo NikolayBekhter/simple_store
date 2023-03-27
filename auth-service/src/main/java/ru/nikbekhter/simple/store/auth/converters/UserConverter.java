@@ -12,9 +12,9 @@ public class UserConverter {
         return UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .username(user.getUsername())
                 .balance(user.getBalance())
+                .active(user.isActive())
                 .build();
     }
     //из dto в user

@@ -17,7 +17,9 @@ import ru.nikbekhter.simple.store.auth.mail.MyMailSender;
 import ru.nikbekhter.simple.store.auth.utils.JwtTokenUtil;
 import ru.nikbekhter.simple.store.auth.api.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,6 +60,22 @@ public class AuthController {
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id: " + userId + " не найден!")));
     }
 
+    @GetMapping("/users")
+    public UserDto findById(@RequestHeader(name = "username") String username) {
+        return userConverter.entityToDto(userService.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id: " + username + " не найден!")));
+    }
+
+    @GetMapping("/users/all")
+    public List<UserDto> findAll() {
+        return userService.findAll().stream().map(userConverter::entityToDto).collect(Collectors.toList());
+    }
+
+    @GetMapping("/users/bun/{id}")
+    public void userBun(@PathVariable Long id) {
+        userService.userBun(id);
+    }
+
     @GetMapping("/users/is_active/{username}")
     public UserDto isActiveForUser (@PathVariable String username) {
         if (username != null) {
@@ -73,9 +91,33 @@ public class AuthController {
         return userConverter.entityToDto(userService.setRole(roleRequest.getUsername(), roleRequest.getRole()));
     }
 
+    @PostMapping("/users/up_balance")
+    public UserDto upBalance(@RequestBody UserDto userDto) {
+        return userConverter.entityToDto(userService.upBalance(userDto));
+    }
+
+    @PostMapping("/users/message")
+    public void sendMessage(@RequestBody MessageDto messageDto) {
+        myMailSender.sendMailMessage(messageDto);
+    }
+
     @GetMapping("/users/get_roles/{username}")
     public List<Role> getRoles(@PathVariable String username) {
         return userService.getUserRoles(username);
     }
 
+    @GetMapping("/users/payment/{total_price}")
+    public ResponseEntity<?> payment(@RequestHeader(name = "username") String username, @PathVariable (name = "total_price") BigDecimal totalPrice) {
+        User user = userService.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + username + " не найден!"));
+        if (user.getBalance().compareTo(totalPrice) < 0) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не достаточно средств на счете."), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(userService.payment(user, totalPrice));
+    }
+
+    @PostMapping("/users/change_balance")
+    public void receivingProfit(@RequestBody UserDto userDto) {
+        userService.receivingProfit(userDto);
+    }
 }
