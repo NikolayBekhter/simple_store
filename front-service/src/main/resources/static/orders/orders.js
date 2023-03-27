@@ -1,4 +1,4 @@
-angular.module('store').controller('orderController', function ($scope, $http, $localStorage) {
+angular.module('store').controller('orderController', function ($scope, $http, $localStorage, $rootScope) {
     // использовать для локального подключения
     // const contextPath = 'http://localhost:5555/core/api/v1/';
     // использовать для удаленного подключения
@@ -8,11 +8,9 @@ angular.module('store').controller('orderController', function ($scope, $http, $
         $http.get(contextPath + 'orders')
             .then(function (response) {
                 $scope.order = response.data;
+                $scope.status = response.data.status;
+                $rootScope.showUserBalance();
             });
-    };
-
-    $scope.showUser = function () {
-        $localStorage.simpleUser.username;
     };
 
     $scope.deleteOrder = function (orderId) {
@@ -22,6 +20,15 @@ angular.module('store').controller('orderController', function ($scope, $http, $
             });
     };
 
+    $scope.payment = function (orderId) {
+        $http.get(contextPath + 'orders/payment/' + orderId)
+            .then(function (response) {
+                $scope.loadOrders();
+                $rootScope.showUserBalance();
+            });
+    };
+
     $scope.loadOrders();
+    $rootScope.showUserBalance();
 
 });

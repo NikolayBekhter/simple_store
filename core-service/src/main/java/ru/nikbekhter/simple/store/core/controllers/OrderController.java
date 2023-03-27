@@ -3,8 +3,10 @@ package ru.nikbekhter.simple.store.core.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nikbekhter.simple.store.core.api.OrderDto;
+import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrderConverter;
 import ru.nikbekhter.simple.store.core.servises.OrderService;
 
@@ -34,5 +36,16 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public void deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrderById(orderId);
+    }
+
+    @GetMapping("/payment/{orderId}")
+    public void payment(@RequestHeader String username, @PathVariable Long orderId) throws ResourceNotFoundException {
+        orderService.payment(username, orderId);
+    }
+
+    @ExceptionHandler({ResourceNotFoundException.class})
+    private ResponseEntity<String> handleNotFound(Exception e) {
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

@@ -13,6 +13,11 @@ import ru.nikbekhter.simple.store.core.entities.Product;
 import ru.nikbekhter.simple.store.core.repositories.ProductRepository;
 import ru.nikbekhter.simple.store.core.repositories.specifications.ProductSpecifications;
 import ru.nikbekhter.simple.store.core.utils.IdentityMap;
+import ru.nikbekhter.simple.store.core.utils.MyQueue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,7 @@ public class ProductService {
     private final ProductRepository repository;
     private final OrganizationService organizationService;
     private IdentityMap identityMap = new IdentityMap();
+    private MyQueue<Product> productQueue = new MyQueue<>();
 
     public Page<Product> find(Integer minPrice, Integer maxPrice, String titlePart, String orgTitlePart, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -60,7 +66,7 @@ public class ProductService {
         return null;
     }
 
-    public Product saveOrUpdate(ProductDto productDto) {
+    public Product saveOrUpdate(ProductDto productDto) throws ResourceNotFoundException {
         if (productDto.getId() != null) {
             Product productFromBd = repository.findById(productDto.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + productDto.getId()));
@@ -78,20 +84,55 @@ public class ProductService {
                 productFromBd.setPrice(productDto.getPrice());
             }
             if (productDto.getQuantity() != 0) {
-                productFromBd.setQuantity(productDto.getQuantity());
+                productFromBd.setQuantity(productFromBd.getQuantity() + productDto.getQuantity());
             }
             return repository.save(productFromBd);
         } else {
-            Product product = Product.builder()
-                    .id(productDto.getId())
-                    .title(productDto.getTitle())
-                    .description(productDto.getDescription())
-                    .organization(organizationService.findByTitleIgnoreCase(productDto.getOrganizationTitle()))
-                    .price(productDto.getPrice())
-                    .quantity(productDto.getQuantity())
-                    .build();
+            Organization organization = organizationService.findByTitleIgnoreCase(productDto.getOrganizationTitle());
+//            System.out.println(organization);
+            if (organization == null) {
+                throw new ResourceNotFoundException("Организация не прошла модерацию, попробуйте добавить продукт позже.");
+            }
+            Product product = new Product();
+            product.setId(productDto.getId());
+            product.setTitle(productDto.getTitle());
+            product.setDescription(productDto.getDescription());
+            product.setOrganization(organization);
+            product.setPrice(productDto.getPrice());
+            product.setConfirmed(false);
+            product.setQuantity(productDto.getQuantity());
             return repository.save(product);
         }
 
+    }
+
+    public Product notConfirmed() throws ResourceNotFoundException {
+        if (productQueue.isEmpty()) {
+            List<Product> notConfirmList = repository.findAllByIsConfirmed(false);
+            if (notConfirmList.isEmpty()) {
+                throw new ResourceNotFoundException("Не подтвержденных продуктов больше нет.");
+            }
+            for (Product product : notConfirmList) {
+                productQueue.enqueue(product);
+            }
+        }
+        return productQueue.dequeue();
+    }
+
+    public void confirm(String title) {
+        Product product = repository.findByTitleIgnoreCase(title).get();
+        product.setConfirmed(true);
+        repository.save(product);
+    }
+
+    public void changeQuantity(Product product) throws ResourceNotFoundException {
+        Product productFromDB = repository.findById(product.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + product.getId()));
+        if (productFromDB.getQuantity() >= product.getQuantity()) {
+            productFromDB.setQuantity(productFromDB.getQuantity() - product.getQuantity());
+            repository.save(productFromDB);
+        } else {
+            throw new ResourceNotFoundException("Недостаточное колличество продукта, id: " + product.getId());
+        }
     }
 }

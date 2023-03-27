@@ -15,7 +15,9 @@ public class OrganizationConverter {
 
     public OrganizationDto entityToDto(Organization organization) {
         return OrganizationDto.builder()
+                .id(organization.getId())
                 .title(organization.getTitle())
+                .description(organization.getDescription())
                 .owner(organization.getOwner())
                 .products(organization.getProducts())
                 .build();

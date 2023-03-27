@@ -1,8 +1,27 @@
 angular.module('store').controller('lkController', function ($scope, $http, $localStorage, $rootScope) {
     // использовать для локального подключения
-    const contextCartPath = 'http://localhost:5555/core/api/v1/org';
+    // const contextPath = 'http://localhost:5555/core/api/v1';
     // использовать для удаленного подключения
-    // const contextCartPath = 'http://95.165.90.118:443/core/api/v1/org';
+    const contextPath = 'http://95.165.90.118:443/core/api/v1';
+
+    $scope.loadHistory = function () {
+        $http.get(contextPath + '/history')
+            .then(function (response) {
+                $scope.historyList = response.data;
+            });
+    };
+
+    $scope.saveProduct = function () {
+        $http.post(contextPath + '/products', $scope.save_product)
+            .then(function (response) {
+                alert("Успех!");
+                $scope.save_product.title = null;
+                $scope.save_product.description = null;
+                $scope.save_product.organizationTitle = null;
+                $scope.save_product.price = null;
+                $scope.save_product.quantity = null;
+            });
+    };
 
     $scope.addNewOrg = function () {
         // var fd = new FormData();
@@ -12,11 +31,12 @@ angular.module('store').controller('lkController', function ($scope, $http, $loc
         //     headers: {'Content-Type': undefined},
         //     transformRequest: angular.identity
         // }
-        $http.post(contextPath, $scope.add_new_org /*fd, config*/)
+        $http.post(contextPath + '/org', $scope.add_new_org /*fd, config*/)
             .then(function (response) {
                 alert("Успех!");
             });
     };
 
+    $scope.loadHistory();
     $rootScope.loadProducts();
 });

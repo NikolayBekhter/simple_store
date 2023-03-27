@@ -11,5 +11,6 @@ angular.module('store').controller('catalogController', function ($scope, $http,
     };
 
     $rootScope.loadProducts();
+    $rootScope.showUserBalance();
 
 });

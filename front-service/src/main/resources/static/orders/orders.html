@@ -4,6 +4,7 @@
         <div>
             <div class="d-flex justify-content-between align-items-center mb-4" ng-repeat="or in order |  limitTo: 1">
                 <h3 class="fw-normal mb-0 text-black">Список заказов пользователя {{or.username}}</h3>
+                <h3 class="fw-normal mb-0 text-black">На балансе {{showUser()}}</h3>
             </div>
             <td></td>
             <div class="accordion" id="accordionExample" ng-repeat="o in order">
@@ -36,13 +37,10 @@
                         </div>
                         <div class="px-5">
                             <button class="btn btn-danger" ng-click="deleteOrder(o.id)">Удалить заказ</button>
+                            <button class="btn btn-warning" ng-show="!o.status" ng-click="payment(o.id)">Перейти к оплате</button>
+                            <h3 class="fw-normal mb-0 text-black" ng-show="o.status">ОПЛАЧЕНО</h3>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <button type="button" class="btn btn-warning btn-block btn-lg" ng-click="">Перейти к оплате</button>
                 </div>
             </div>
         </div>

@@ -17,6 +17,7 @@ public class ProductConverter {
                 .organizationTitle(product.getOrganization().getTitle())
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
+                .isConfirmed(product.isConfirmed())
                 .discount(product.getDiscount())
                 .review(product.getReview())
                 .build();
@@ -24,10 +25,12 @@ public class ProductConverter {
 
     public Product dtoToEntity(ProductDto productDto) {
         return Product.builder()
+                .id(productDto.getId())
                 .title(productDto.getTitle())
                 .description(productDto.getDescription())
                 .price(productDto.getPrice())
                 .quantity(productDto.getQuantity())
+                .isConfirmed(productDto.isConfirmed())
                 .build();
     }
 }
