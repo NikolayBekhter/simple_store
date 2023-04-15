@@ -63,11 +63,11 @@
 
 angular.module('store').controller('indexController', function ($rootScope, $location, $scope, $http, $localStorage) {
     // использовать для локального подключения
-    // const contextPath = 'http://localhost:5555/auth/api/v1/';
-    // const contextPathCore = 'http://localhost:5555/core/api/v1/';
+    const contextPath = 'http://localhost:5555/auth/api/v1/';
+    const contextPathCore = 'http://localhost:5555/core/api/v1/';
     // использовать для удаленного подключения
-    const contextPath = 'http://95.165.90.118:443/auth/api/v1/';
-    const contextPathCore = 'http://95.165.90.118:443/core/api/v1/';
+    // const contextPath = 'http://95.165.90.118:443/auth/api/v1/';
+    // const contextPathCore = 'http://95.165.90.118:443/core/api/v1/';
 
     $rootScope.showControl = function () {
         if ($localStorage.simpleUser && $localStorage.roleIndex >= 0) {
@@ -118,9 +118,8 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
             params: {
                 p: pageIndex,
                 title_part: $scope.filter ? $scope.filter.title_part : null,
-                org_title_part: $scope.filter ? $scope.filter.org_title_part : null,
-                max_cost: $scope.filter ? $scope.filter.max_cost : null,
-                min_cost: $scope.filter ? $scope.filter.min_cost : null
+                max_price: $scope.filter ? $scope.filter.max_price : null,
+                min_price: $scope.filter ? $scope.filter.min_price : null
             }
         }).then(function (response) {
             $scope.ProductPage = response.data;
@@ -138,11 +137,7 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
     }
 
     $rootScope.isThereIndex = function () {
-        if ($scope.indexNumber > 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return $scope.indexNumber > 1;
     }
 
     $rootScope.previousPage = function (page, delta) {
@@ -175,5 +170,13 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
     $rootScope.showUser = function () {
         return $scope.userBalance;
     };
+
+    // $rootScope.getLogoCompany = function (title) {
+    //     $http.get(contextPathCore + 'logo/' + title)
+    //         .then(function (response) {
+    //             console.log(response.data);
+    //             // $rootScope.isActive = response.data;
+    //         })
+    // };
 
 });

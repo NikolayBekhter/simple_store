@@ -88,7 +88,8 @@ public class AuthController {
 
     @PostMapping("/users/set_role")
     public UserDto setRole(@RequestBody RoleRequest roleRequest) {
-        return userConverter.entityToDto(userService.setRole(roleRequest.getUsername(), roleRequest.getRole()));
+        System.out.println("setRole " + roleRequest);
+        return userConverter.entityToDto(userService.setRole(roleRequest.getEmail(), roleRequest.getRole()));
     }
 
     @PostMapping("/users/up_balance")

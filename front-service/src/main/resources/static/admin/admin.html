@@ -12,6 +12,7 @@
                     <tr>
                         <td>Владелец</td>
                         <td>Организация</td>
+                        <td>Логотип</td>
                         <td>Описание</td>
                         <td>Действие</td>
                     </tr>
@@ -19,6 +20,7 @@
                     <tr>
                         <td>{{notConfirmedOrg.owner}}</td>
                         <td>{{notConfirmedOrg.title}}</td>
+                        <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{notConfirmedOrg.title}}" alt="лого" width="60" height="60"></td>
                         <td>{{notConfirmedOrg.description}}</td>
                         <td>
                             <button class="btn btn-success" ng-click="confirmedOrg(notConfirmedOrg.title)">Одобрить
@@ -31,7 +33,7 @@
             </div>
             <HR>
             <div>
-                <h3>Модерация продуктов</h3>
+                <h3>Модерация товаров</h3>
                 <table class="table table-hover" cellpadding="0" cellspacing="0">
                     <tr>
                         <td>Название продукта</td>
@@ -156,23 +158,46 @@
                         <p></p>
                         <button type="submit" class="btn btn-primary">Сохранить/изменить продукт</button>
                     </form>
-                    <HR>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-normal mb-0 text-black">Каталог товаров</h3>
-                    </div>
                     <div class="card-body p-4">
                         <div>
+                            <HR>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-normal mb-0 text-black">История покупок всех пользователей</h3>
+                            </div>
+                            <div class="card-body p-4">
+                                <div>
+                                    <p></p>
+                                    <table class="table table-hover" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>ID</td>
+                                            <td>Пользователь</td>
+                                            <td>Название продукта</td>
+                                            <td>Организация</td>
+                                            <td>Колличество</td>
+                                            <td>Дата покупки</td>
+                                        </tr>
+                                        <tbody>
+                                        <tr ng-repeat="h in allHistoryList">
+                                            <td>{{h.id}}</td>
+                                            <td>{{h.email}}</td>
+                                            <td>{{h.productTitle}}</td>
+                                            <td>{{h.organization}}</td>
+                                            <td>{{h.quantity}}</td>
+                                            <td>{{h.datePurchase}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <HR>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-normal mb-0 text-black">Каталог товаров</h3>
+                            </div>
                             <form novalidate ng-submit="loadProducts()">
                                 <div class="form-floating input-group-sm">
                                     <input type="text" class="form-control" id="filterTitle" placeholder=""
                                            ng-model="filter.title_part">
                                     <label for="filterTitle">Название продукта</label>
-                                </div>
-                                <p></p>
-                                <div class="form-floating input-group-sm">
-                                    <input type="text" class="form-control" id="filterOrgTitle" placeholder=""
-                                           ng-model="filter.org_title_part">
-                                    <label for="filterOrgTitle">Название организации</label>
                                 </div>
                                 <p></p>
                                 <div class="form-floating input-group-sm">
@@ -219,57 +244,15 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <HR>
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h3 class="fw-normal mb-0 text-black">История покупок всех пользователей</h3>
-                            </div>
-                            <div class="card-body p-4">
-                                <div>
-                                    <p></p>
-                                    <table class="table table-hover" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Пользователь</td>
-                                            <td>Название продукта</td>
-                                            <td>Организация</td>
-                                            <td>Колличество</td>
-                                            <td>Дата покупки</td>
-                                        </tr>
-                                        <tbody>
-                                        <tr ng-repeat="h in allHistoryList">
-                                            <td>{{h.id}}</td>
-                                            <td>{{h.email}}</td>
-                                            <td>{{h.productTitle}}</td>
-                                            <td>{{h.organization}}</td>
-                                            <td>{{h.quantity}}</td>
-                                            <td>{{h.datePurchase}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <HR>
-                                    <nav aria-label="Page navigation" ng-show="isThereIndex()">
-                                        <ul class="pagination">
-                                            <li class="page-item" ng-show="ProductPage.page != 0">
-                                                <button class="page-link" ng-click="previousPage(ProductPage.page, 0)"
-                                                        aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </button>
-                                            </li>
-                                            <li class="page-item" ng-repeat="pageIndex in pagesList">
-                                                <button class="page-link" ng-click="loadProducts(pageIndex)">
-                                                    {{pageIndex}}
-                                                </button>
-                                            </li>
-                                            <li class="page-item" ng-show="ProductPage.page != (indexNumber - 1)">
-                                                <button class="page-link" ng-click="nextPage(ProductPage.page, 2)"
-                                                        aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
+                            <nav aria-label="Page navigation" ng-show="isThereIndex()">
+                                <ul class="pagination">
+                                    <li class="page-item" ng-repeat="pageIndex in pagesList">
+                                        <button class="page-link" ng-click="loadProducts(pageIndex)">
+                                            {{pageIndex}}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

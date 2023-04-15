@@ -1,8 +1,8 @@
 angular.module('store').controller('orderController', function ($scope, $http, $localStorage, $rootScope) {
     // использовать для локального подключения
-    // const contextPath = 'http://localhost:5555/core/api/v1/';
+    const contextPath = 'http://localhost:5555/core/api/v1/';
     // использовать для удаленного подключения
-    const contextPath = 'http://95.165.90.118:443/core/api/v1/';
+    // const contextPath = 'http://95.165.90.118:443/core/api/v1/';
 
     $scope.loadOrders = function () {
         $http.get(contextPath + 'orders')

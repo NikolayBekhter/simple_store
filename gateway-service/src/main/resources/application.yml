@@ -35,7 +35,7 @@ spring:
             - StripPrefix=1
             - PrefixPath=/simple-store-core
             - JwtAuthFilter
-            - NotForGuestsFilter
+#            - NotForGuestsFilter
 
         - id: cart-service
           uri: http://localhost:8182
@@ -48,7 +48,7 @@ spring:
             - NotForGuestsFilter
 
         - id: auth-service
-          uri: http://localhost:8188
+          uri: http://localhost:8181
           predicates:
             - Path=/auth/api/v1/users/set_role
           filters:

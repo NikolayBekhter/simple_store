@@ -31,14 +31,13 @@ public class ProductController {
             @RequestParam(name = "min_price", required = false) Integer minPrice,
             @RequestParam(name = "max_price", required = false) Integer maxPrice,
 //            @RequestParam(name = "keyword_part", required = false) String keywordPart,
-            @RequestParam(name = "title_part", required = false) String titlePart,
-            @RequestParam(name = "org_title_part", required = false) String orgTitlePart
+            @RequestParam(name = "title_part", required = false) String titlePart
     ) {
         if (page < 1) {
             page = 1;
         }
 
-        Page<ProductDto> jpaPage = productService.find(minPrice, maxPrice, titlePart, orgTitlePart, page).map(
+        Page<ProductDto> jpaPage = productService.find(minPrice, maxPrice, titlePart, page).map(
                 productConverter::entityToDto
         );
         PageDto<ProductDto> out = new PageDto<>();
@@ -49,8 +48,6 @@ public class ProductController {
         for (ProductDto productDto : jpaPage.getContent()) {
             if (productDto.isConfirmed()) {
                 productDtos.add(productDto);
-            } else {
-                productQueue.enqueue(productConverter.dtoToEntity(productDto));
             }
         }
         out.setItems(productDtos);

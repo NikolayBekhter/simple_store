@@ -1,10 +1,10 @@
 angular.module('store').controller('adminController', function ($scope, $http, $localStorage, $rootScope) {
     // использовать для локального подключения
-    // const contextPathCore = 'http://localhost:5555/core/api/v1/';
-    // const contextPathAuth = 'http://localhost:5555/auth/api/v1/';
+    const contextPathCore = 'http://localhost:5555/core/api/v1/';
+    const contextPathAuth = 'http://localhost:5555/auth/api/v1/';
     // использовать для удаленного подключения
-    const contextPathCore = 'http://95.165.90.118:443/core/api/v1/';
-    const contextPathAuth = 'http://95.165.90.118:443/auth/api/v1/';
+    // const contextPathCore = 'http://95.165.90.118:443/core/api/v1/';
+    // const contextPathAuth = 'http://95.165.90.118:443/auth/api/v1/';
 
     $scope.getUsers = function () {
         $http.get(contextPathAuth + 'users/all')
@@ -23,11 +23,32 @@ angular.module('store').controller('adminController', function ($scope, $http, $
     $scope.setRole = function () {
         console.log($scope.user)
         $http.post(contextPathAuth + 'users/set_role', $scope.user)
-            .then(function successCallback(response) {
+            .then(function (response) {
                 alert('Роль успешно добавлена!');
                 $scope.user.email = null;
                 $scope.user.role = null;
             });
+    };
+
+    $scope.loadProducts = function (pageIndex = 1) {
+        $http({
+            url: contextPathCore + 'products',
+            method: 'GET',
+            params: {
+                p: pageIndex,
+                title_part: $scope.filter ? $scope.filter.title_part : null,
+                max_price: $scope.filter ? $scope.filter.max_price : null,
+                min_price: $scope.filter ? $scope.filter.min_price : null
+            }
+        }).then(function (response) {
+            $scope.filter.title_part = null;
+            $scope.filter.max_price = null;
+            $scope.filter.min_price = null;
+            $scope.ProductPage = response.data;
+            console.log(response.data);
+            $scope.indexNumber = $scope.ProductPage.totalPages;
+            $scope.generatePagesList($scope.ProductPage.totalPages);
+        });
     };
 
     $scope.saveOrUpdateProduct = function () {

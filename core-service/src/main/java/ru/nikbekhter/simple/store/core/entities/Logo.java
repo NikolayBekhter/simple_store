@@ -2,6 +2,7 @@ package ru.nikbekhter.simple.store.core.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -28,6 +29,7 @@ public class Logo {
     private String contentType;
 
     @Lob
+    @Type(type = "org.hibernate.type.ImageType")
     private byte[] bytes;
 
 }

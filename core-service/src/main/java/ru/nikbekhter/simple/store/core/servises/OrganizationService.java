@@ -3,6 +3,7 @@ package ru.nikbekhter.simple.store.core.servises;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.nikbekhter.simple.store.core.api.OrganizationDto;
 import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrganizationConverter;
@@ -23,11 +24,11 @@ public class OrganizationService {
     private final OrganizationConverter organizationConverter;
     private MyQueue<Organization> myQueue = new MyQueue<>();
 
-    public void save(OrganizationDto organizationDto, String username/*, MultipartFile file*/) throws IOException {
+    public void save(OrganizationDto organizationDto, String username, MultipartFile file) throws IOException {
         Organization organization = organizationConverter.dtoToEntity(organizationDto);
         organization.setOwner(username);
-//        organization.setLogo(logoService.save(file));
-        log.info("Добавлена новая организация {}", organization);
+        organization.setLogo(logoService.save(file));
+        log.info("Добавлена новая организация {}, её собственник {}", organization.getTitle(), organization.getOwner());
         myQueue.enqueue(organization);
         repository.save(organization);
     }
@@ -51,17 +52,17 @@ public class OrganizationService {
         if (organization.isActive()) {
             return organization;
         } else {
-            return null;
+            throw new ResourceNotFoundException("Организация с названием: " + title + " не подтверждена.");
         }
     }
 
-    public Organization findByTitleForQueue(String title) throws ResourceNotFoundException {
+    public Organization findByTitle(String title) throws ResourceNotFoundException {
         return repository.findByTitleIgnoreCase(title)
                 .orElseThrow(() -> new ResourceNotFoundException("Организация с названием: " + title + " не найдена."));
     }
 
     public Logo findLogoByTitleOrganization(String title) {
-        return findByTitleIgnoreCase(title).getLogo();
+        return findByTitle(title).getLogo();
     }
 
     public void confirm(String title) {

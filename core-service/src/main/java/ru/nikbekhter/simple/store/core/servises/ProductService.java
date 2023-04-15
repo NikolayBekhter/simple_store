@@ -28,19 +28,16 @@ public class ProductService {
     private IdentityMap identityMap = new IdentityMap();
     private MyQueue<Product> productQueue = new MyQueue<>();
 
-    public Page<Product> find(Integer minPrice, Integer maxPrice, String titlePart, String orgTitlePart, Integer page) {
+    public Page<Product> find(Integer minPrice, Integer maxPrice, String titlePart, Integer page) {
         Specification<Product> spec = Specification.where(null);
         if (minPrice != null) {
-            spec = spec.and(ProductSpecifications.costGreaterOrEqualsThan(minPrice));
+            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
         }
         if (maxPrice != null) {
-            spec = spec.and(ProductSpecifications.costLessOrEqualsThan(maxPrice));
+            spec = spec.and(ProductSpecifications.priceLessOrEqualsThan(maxPrice));
         }
         if (titlePart != null) {
             spec = spec.and(ProductSpecifications.titleLike(titlePart));
-        }
-        if (orgTitlePart != null) {
-            spec = spec.and(ProductSpecifications.orgTitleLike(orgTitlePart));
         }
 //        if (keywordPart != null) {
 //            spec = spec.and(ProductSpecifications.keywordLike(keywordPart));

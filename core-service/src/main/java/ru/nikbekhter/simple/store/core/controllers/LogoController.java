@@ -2,6 +2,7 @@ package ru.nikbekhter.simple.store.core.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,10 @@ public class LogoController {
 
     @GetMapping("/{title}")
     public ResponseEntity<?> getLogoByTitleOrganization(@PathVariable String title) {
+        System.out.println(title);
         Logo logo = organizationService.findLogoByTitleOrganization(title);
-        return ResponseEntity.ok()
+        return /*new ResponseEntity<>(logo, HttpStatus.OK);*/
+                ResponseEntity.ok()
                 .header("fileName", logo.getOriginalFileName())
                 .contentType(MediaType.valueOf(logo.getContentType()))
                 .contentLength(logo.getSize())

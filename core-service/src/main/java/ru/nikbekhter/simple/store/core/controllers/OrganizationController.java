@@ -2,13 +2,19 @@ package ru.nikbekhter.simple.store.core.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.nikbekhter.simple.store.core.api.OrganizationDto;
 import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrganizationConverter;
 import ru.nikbekhter.simple.store.core.servises.OrganizationService;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,10 +25,15 @@ public class OrganizationController {
     private final OrganizationConverter converter;
 
     @PostMapping
-    public void save(/*@RequestParam("file")MultipartFile file,*/
-                     @RequestBody OrganizationDto organizationDto,
-                     @RequestHeader(name = "username") String username) throws IOException {
-        organizationService.save(organizationDto, username/*, file*/);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createCompany(@RequestParam("owner") String companyOwner,
+                              @RequestParam("name") String companyName,
+                              @RequestParam("description") String companyDescription,
+                              @RequestParam(value = "companyImage", required = false) MultipartFile companyImage) throws IOException {
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setTitle(companyName);
+        organizationDto.setDescription(companyDescription);
+        organizationService.save(organizationDto, companyOwner, companyImage);
     }
 
     @GetMapping("/{title}")

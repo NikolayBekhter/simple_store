@@ -7,10 +7,10 @@
             </div>
             <div class="card-body p-4">
                 <div><HR>
-                    <h3>Добавить продукт</h3>
+                    <h3>Добавить товар</h3>
 
                     <form novalidate ng-submit="saveProduct()">
-                        <input class="form-control" type="text" placeholder="Название продукта" ng-model="save_product.title">
+                        <input class="form-control" type="text" placeholder="Название товара" ng-model="save_product.title">
                         <p></p>
                         <input class="form-control" type="text" placeholder="Описание" ng-model="save_product.description">
                         <p></p>
@@ -20,24 +20,33 @@
                         <p></p>
                         <input class="form-control" type="number" placeholder="Колличество" ng-model="save_product.quantity">
                         <p></p>
-                        <button type="submit" class="btn btn-primary">Сохранить продукт</button>
+                        <button type="submit" class="btn btn-primary">Сохранить товар</button>
                     </form>
                     <HR>
                     <h3>Добавить организацию</h3>
 
-                    <form role="form" enctype="multipart/form-data" name="myForm">
-                        <input type="text" class="form-control" placeholder="Название организации"
-                               ng-model="add_new_org.title">
-                        <p></p>
-                        <input type="text" class="form-control" placeholder="Описание"
-                               ng-model="add_new_org.description">
-                        <p></p>
-                        <div class="form-group col-md-6">
-                            <input type="file" class="form-control" placeholder="Логотип" select-ng-files
-                                   ng-model="file" multiple>
-                        </div>
-                        <p></p>
-                        <button type="submit" class="btn btn-primary" ng-click="addNewOrg()">Сохранить организацию</button>
+<!--                    <form role="form" enctype="multipart/form-data" name="myForm">-->
+<!--                        <input type="text" class="form-control" placeholder="Название организации"-->
+<!--                               name="title">-->
+<!--                        <p></p>-->
+<!--                        <input type="text" class="form-control" placeholder="Описание"-->
+<!--                               name="description">-->
+<!--                        <p></p>-->
+<!--                        <div class="form-group col-md-6">-->
+<!--                            <input type="file" class="form-control" placeholder="Логотип" select-ng-files-->
+<!--                                   ng-model="file" multiple>-->
+<!--                        </div>-->
+<!--                        <p></p>-->
+<!--                        <button type="submit" class="btn btn-primary" ng-click="addNewOrg()">Сохранить организацию</button>-->
+<!--                    </form>-->
+                    <form>
+                        <label for="companyName">Название организации:</label>
+                        <input type="text" id="companyName" name="companyName"><br><br>
+                        <label for="companyDescription">Описание:</label>
+                        <input type="text" id="companyDescription" name="companyName"><br><br>
+                        <label for="companyImage">Логотип:</label>
+                        <input type="file" id="companyImage" name="companyImage"><br><br>
+                        <button type="button" ng-click="createCompany()">Create Company</button>
                     </form>
                     <HR>
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -49,7 +58,7 @@
                             <table class="table table-hover" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>ID</td>
-                                    <td>Название продукта</td>
+                                    <td>Название товара</td>
                                     <td>Организация</td>
                                     <td>Колличество</td>
                                     <td>Дата покупки</td>

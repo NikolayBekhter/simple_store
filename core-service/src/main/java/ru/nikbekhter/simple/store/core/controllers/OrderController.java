@@ -24,6 +24,7 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createOrder(@RequestHeader String username) {
+        System.out.println(username + " оформил заказ!");
         orderService.createOrder(username);
     }
 

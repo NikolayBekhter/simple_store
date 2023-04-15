@@ -54,7 +54,7 @@ create table logo
     original_file_name  varchar(255),
     size                bigint,
     content_type        varchar(255),
-    bytes               oid
+    bytes               bytea
 );
 
 create table organizations

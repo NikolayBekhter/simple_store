@@ -1,10 +1,10 @@
 angular.module('store').controller('cartController', function ($scope, $http, $location, $localStorage, $rootScope) {
     // использовать для локального подключения
-    // const contextPath = 'http://localhost:5555/cart/api/v1/';
-    // const contextCorePath = 'http://localhost:5555/core/api/v1/';
+    const contextPath = 'http://localhost:5555/cart/api/v1/';
+    const contextCorePath = 'http://localhost:5555/core/api/v1/';
     // использовать для удаленного подключения
-    const contextPath = 'http://95.165.90.118:443/cart/api/v1/';
-    const contextCorePath = 'http://95.165.90.118:443/core/api/v1/';
+    // const contextPath = 'http://95.165.90.118:443/cart/api/v1/';
+    // const contextCorePath = 'http://95.165.90.118:443/core/api/v1/';
 
     if ($localStorage.simpleUser) {
         $rootScope.isActiveUser($localStorage.simpleUser.username);
