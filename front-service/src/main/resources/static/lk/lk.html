@@ -6,48 +6,69 @@
                 <h3 class="fw-normal mb-0 text-black">Личный кабинет</h3>
             </div>
             <div class="card-body p-4">
-                <div><HR>
+                <div>
+                    <HR>
                     <h3>Добавить товар</h3>
-
                     <form novalidate ng-submit="saveProduct()">
-                        <input class="form-control" type="text" placeholder="Название товара" ng-model="save_product.title">
+                        <input class="form-control" type="text" placeholder="Название товара"
+                               ng-model="save_product.title">
                         <p></p>
-                        <input class="form-control" type="text" placeholder="Описание" ng-model="save_product.description">
+                        <input class="form-control" type="text" placeholder="Описание"
+                               ng-model="save_product.description">
                         <p></p>
-                        <input class="form-control" type="text" placeholder="Организация" ng-model="save_product.organizationTitle">
+                        <input class="form-control" type="text" placeholder="Организация"
+                               ng-model="save_product.organizationTitle">
                         <p></p>
                         <input class="form-control" type="number" placeholder="Цена" ng-model="save_product.price">
                         <p></p>
-                        <input class="form-control" type="number" placeholder="Колличество" ng-model="save_product.quantity">
+                        <input class="form-control" type="number" placeholder="Колличество"
+                               ng-model="save_product.quantity">
                         <p></p>
                         <button type="submit" class="btn btn-primary">Сохранить товар</button>
                     </form>
                     <HR>
                     <h3>Добавить организацию</h3>
-
-<!--                    <form role="form" enctype="multipart/form-data" name="myForm">-->
-<!--                        <input type="text" class="form-control" placeholder="Название организации"-->
-<!--                               name="title">-->
-<!--                        <p></p>-->
-<!--                        <input type="text" class="form-control" placeholder="Описание"-->
-<!--                               name="description">-->
-<!--                        <p></p>-->
-<!--                        <div class="form-group col-md-6">-->
-<!--                            <input type="file" class="form-control" placeholder="Логотип" select-ng-files-->
-<!--                                   ng-model="file" multiple>-->
-<!--                        </div>-->
-<!--                        <p></p>-->
-<!--                        <button type="submit" class="btn btn-primary" ng-click="addNewOrg()">Сохранить организацию</button>-->
-<!--                    </form>-->
                     <form>
-                        <label for="companyName">Название организации:</label>
-                        <input type="text" id="companyName" name="companyName"><br><br>
-                        <label for="companyDescription">Описание:</label>
-                        <input type="text" id="companyDescription" name="companyName"><br><br>
-                        <label for="companyImage">Логотип:</label>
-                        <input type="file" id="companyImage" name="companyImage"><br><br>
-                        <button type="button" ng-click="createCompany()">Create Company</button>
+                        <div>
+                            <label for="companyName">Название организации:</label>
+                            <input type="text" id="companyName" name="companyName"><br><br>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="companyDescription">Описание:</label>
+                            <textarea id="companyDescription" name="companyName" cols="40" rows="3" placeholder="Напишите описание организации..."></textarea><br><br>
+                        </div>
+                        <div>
+                            <label for="companyImage">Логотип:</label>
+                            <input type="file" id="companyImage" name="companyImage"><br><br>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="createCompany()">Создать</button>
                     </form>
+                    <HR>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">История уведомлений</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div>
+                            <table class="table table-hover" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>Заголовок</td>
+                                    <td>Содежание</td>
+                                    <td>Дата получения</td>
+                                    <td>Действие</td>
+                                </tr>
+                                <tbody>
+                                <tr ng-repeat="n in notificationList">
+                                    <td>{{n.title}}</td>
+                                    <td>{{n.content}}</td>
+                                    <td>{{n.createdAt}}</td>
+                                    <td>
+                                        <button class="btn btn-danger" ng-click="deleteNotification(n.id)">Удалить сообщение</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <HR>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-normal mb-0 text-black">Ваша история покупок</h3>
@@ -57,7 +78,6 @@
                             <p></p>
                             <table class="table table-hover" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td>ID</td>
                                     <td>Название товара</td>
                                     <td>Организация</td>
                                     <td>Колличество</td>
@@ -65,7 +85,6 @@
                                 </tr>
                                 <tbody>
                                 <tr ng-repeat="h in historyList">
-                                    <td>{{h.id}}</td>
                                     <td>{{h.productTitle}}</td>
                                     <td>{{h.organization}}</td>
                                     <td>{{h.quantity}}</td>
@@ -73,26 +92,6 @@
                                 </tr>
                                 </tbody>
                             </table>
-<!--                            <nav aria-label="Page navigation" ng-show="isThereIndex()">-->
-<!--                                <ul class="pagination">-->
-<!--                                    <li class="page-item" ng-show="ProductPage.page != 0">-->
-<!--                                        <button class="page-link" ng-click="previousPage(ProductPage.page, 0)"-->
-<!--                                                aria-label="Previous">-->
-<!--                                            <span aria-hidden="true">&laquo;</span>-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-<!--                                    <li class="page-item" ng-repeat="pageIndex in pagesList">-->
-<!--                                        <button class="page-link" ng-click="loadProducts(pageIndex)">{{pageIndex}}-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-<!--                                    <li class="page-item" ng-show="ProductPage.page != (indexNumber - 1)">-->
-<!--                                        <button class="page-link" ng-click="nextPage(ProductPage.page, 2)"-->
-<!--                                                aria-label="Next">-->
-<!--                                            <span aria-hidden="true">&raquo;</span>-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
                         </div>
                     </div>
                 </div>

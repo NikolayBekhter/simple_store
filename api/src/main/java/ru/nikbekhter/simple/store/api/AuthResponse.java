@@ -1,4 +1,4 @@
-package ru.nikbekhter.simple.store.auth.api;
+package ru.nikbekhter.simple.store.api;
 
 public class AuthResponse {
     private String token;

@@ -12,6 +12,7 @@
         <module>gateway-service</module>
         <module>front-service</module>
         <module>cart-service</module>
+        <module>api</module>
     </modules>
 
 	<groupId>ru.nikbekhter.simple.store</groupId>

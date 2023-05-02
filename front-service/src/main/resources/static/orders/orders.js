@@ -28,6 +28,32 @@ angular.module('store').controller('orderController', function ($scope, $http, $
             });
     };
 
+    // $scope.isRefund = function (orderId) {
+    //     $http.get(contextPath + 'orders/is_refund/' + orderId)
+    //         .then(function (response) {
+    //             $localStorage.isRefundOrder = response.data;
+    //             console.log($localStorage.isRefundOrder);
+    //         });
+    // };
+
+    $scope.makeRefund = function (orderId) {
+        $http.get(contextPath + 'orders/is_refund/' + orderId)
+            .then(function (response) {
+                $scope.isRefundOrder = response.data;
+                if ($scope.isRefundOrder) {
+                    console.log('good');
+                    $http.get(contextPath + 'orders/refund/' + orderId)
+                        .then(function (response) {
+                            alert('Средства успешно возвращены!')
+                            $scope.loadOrders();
+                            $rootScope.showUserBalance();
+                        });
+                } else {
+                    alert('С момента оплаты прошло 24 часа, возврат средств недоступен!!')
+                }
+            });
+    };
+
     $scope.loadOrders();
     $rootScope.showUserBalance();
 

@@ -1,7 +1,7 @@
 package ru.nikbekhter.simple.store.core.converters;
 
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.core.api.OrganizationDto;
+import ru.nikbekhter.simple.store.api.OrganizationDto;
 import ru.nikbekhter.simple.store.core.entities.Organization;
 
 @Service
@@ -14,12 +14,12 @@ public class OrganizationConverter {
     }
 
     public OrganizationDto entityToDto(Organization organization) {
-        return OrganizationDto.builder()
-                .id(organization.getId())
-                .title(organization.getTitle())
-                .description(organization.getDescription())
-                .owner(organization.getOwner())
-                .products(organization.getProducts())
-                .build();
+        OrganizationDto dto = new OrganizationDto();
+        dto.setId(organization.getId());
+        dto.setTitle(organization.getTitle());
+        dto.setDescription(organization.getDescription());
+        dto.setOwner(organization.getOwner());
+        dto.setActive(organization.isActive());
+        return dto;
     }
 }

@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.auth.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.auth.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.auth.entities.User;
 import ru.nikbekhter.simple.store.auth.entities.UsersProductsList;
 import ru.nikbekhter.simple.store.auth.repositories.UsersProductsRepository;

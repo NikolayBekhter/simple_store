@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.nikbekhter.simple.store.cart.api.ProductDto;
-import ru.nikbekhter.simple.store.cart.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 
 @Component
 @RequiredArgsConstructor

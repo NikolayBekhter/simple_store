@@ -8,7 +8,10 @@
             <HR>
             <div>
                 <h3>Модерация организаций</h3>
-                <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <table class="table table-hover" cellpadding="0" cellspacing="0" ng-show="isUnconfirmedOrg">
+                    <button class="btn btn-success" ng-click="notConfirmed()" ng-show="!isUnconfirmedOrg">
+                        Проверить есть ли организации для подтверждения
+                    </button>
                     <tr>
                         <td>Владелец</td>
                         <td>Организация</td>
@@ -20,7 +23,8 @@
                     <tr>
                         <td>{{notConfirmedOrg.owner}}</td>
                         <td>{{notConfirmedOrg.title}}</td>
-                        <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{notConfirmedOrg.title}}" alt="лого" width="60" height="60"></td>
+                        <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{notConfirmedOrg.title}}"
+                                 alt="лого" width="60" height="60"></td>
                         <td>{{notConfirmedOrg.description}}</td>
                         <td>
                             <button class="btn btn-success" ng-click="confirmedOrg(notConfirmedOrg.title)">Одобрить
@@ -34,9 +38,12 @@
             <HR>
             <div>
                 <h3>Модерация товаров</h3>
-                <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <table class="table table-hover" cellpadding="0" cellspacing="0" ng-show="isUnconfirmedProd">
+                    <button class="btn btn-success" ng-click="notConfirmedProduct()" ng-show="!isUnconfirmedProd">
+                        Проверить есть ли товары для подтверждения
+                    </button>
                     <tr>
-                        <td>Название продукта</td>
+                        <td>Название товара</td>
                         <td>Организация</td>
                         <td>Описание</td>
                         <td>Цена</td>
@@ -54,7 +61,7 @@
                             <button class="btn btn-success" ng-click="confirmedProduct(notConfirmedProd.title)">
                                 Одобрить
                             </button>
-                            <button class="btn btn-danger" ng-click="notConfirmedProduct()">Следующий продукт</button>
+                            <button class="btn btn-danger" ng-click="notConfirmedProduct()">Следующий товар</button>
                         </td>
                     </tr>
                     </tbody>
@@ -63,20 +70,28 @@
             <HR>
             <div>
                 <form ng-submit="sendMessage()">
-                    <h5>Отправить сообщение</h5>
+                    <h5>Отправить уведомление</h5>
                     <div class="form-group">
-                        <label for="users_msg_email">Email</label>
+                        <label for="users_msg_email">Кому</label>
                         <input type="text" class="form-control" id="users_msg_email" placeholder="Email"
-                               ng-model="users_msg.recipient">
+                               ng-model="users_msg.sendTo">
                     </div>
                     <div class="form-group">
-                        <label for="users_msg">Сообщение</label>
-                        <input type="text" class="form-control" id="users_msg" placeholder="Сообщение"
-                               ng-model="users_msg.message">
+                        <label for="users_msg_title">Заголовок</label>
+                        <input type="text" class="form-control" id="users_msg_title" placeholder="Заголовок"
+                               ng-model="users_msg.title">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-md-6">
+                            <label for="users_msg">Сообщение</label>
+                            <textarea class="form-control" id="users_msg" placeholder="Сообщение" cols="40" rows="3"
+                                      ng-model="users_msg.content"></textarea>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-success">Отправить</button>
                 </form>
             </div>
+            <HR>
             <table class="table table-hover" cellpadding="0" cellspacing="0">
                 <h3>Пользователи</h3>
                 <tr>
@@ -96,6 +111,32 @@
                     <td>{{user.active}}</td>
                     <td>
                         <button class="btn btn-danger" ng-click="userBun(user.id)">Бан</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <HR>
+            <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <h3>Список организаций</h3>
+                <tr>
+                    <td>ID</td>
+                    <td>Название</td>
+                    <td>Логотип</td>
+                    <td>Описание</td>
+                    <td>Владелец</td>
+                    <td>Active</td>
+                    <td>Действие</td>
+                </tr>
+                <tbody>
+                <tr ng-repeat="o in orgList">
+                    <td>{{o.id}}</td>
+                    <td>{{o.title}}</td>
+                    <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{o.title}}" alt="лого" width="60" height="60"></td>
+                    <td>{{o.description}}</td>
+                    <td>{{o.owner}}</td>
+                    <td>{{o.active}}</td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="orgBun(o.id)">Бан</button>
                     </td>
                 </tr>
                 </tbody>
@@ -237,9 +278,6 @@
                                     <td>{{p.quantity}}</td>
                                     <td>
                                         <button class="btn btn-primary" ng-click="showProductInfo(p.id)">Инфо</button>
-                                        <!--                <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Удалить</button>-->
-                                        <button class="btn btn-success" ng-click="sendToCart(p.id)">Добавить в корзину
-                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>

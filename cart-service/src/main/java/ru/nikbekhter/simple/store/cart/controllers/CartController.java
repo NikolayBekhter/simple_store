@@ -3,7 +3,7 @@ package ru.nikbekhter.simple.store.cart.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.cart.api.CartDto;
+import ru.nikbekhter.simple.store.api.CartDto;
 import ru.nikbekhter.simple.store.cart.converters.CartConverter;
 import ru.nikbekhter.simple.store.cart.services.CartService;
 

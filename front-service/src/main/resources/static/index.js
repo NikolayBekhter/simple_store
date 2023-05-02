@@ -123,7 +123,6 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
             }
         }).then(function (response) {
             $scope.ProductPage = response.data;
-            console.log(response.data);
             $scope.indexNumber = $scope.ProductPage.totalPages;
             $scope.generatePagesList($scope.ProductPage.totalPages);
         });
@@ -171,12 +170,12 @@ angular.module('store').controller('indexController', function ($rootScope, $loc
         return $scope.userBalance;
     };
 
-    // $rootScope.getLogoCompany = function (title) {
-    //     $http.get(contextPathCore + 'logo/' + title)
-    //         .then(function (response) {
-    //             console.log(response.data);
-    //             // $rootScope.isActive = response.data;
-    //         })
-    // };
+    $rootScope.isRefund = function (orderId) {
+        $http.get(contextPathCore + 'orders/is_refund/' + orderId)
+            .then(function (response) {
+                $rootScope.isRefundOrder = response.data;
+                console.log($rootScope.isRefundOrder);
+            });
+    };
 
 });

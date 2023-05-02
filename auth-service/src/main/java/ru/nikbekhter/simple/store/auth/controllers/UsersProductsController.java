@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.auth.api.AppError;
-import ru.nikbekhter.simple.store.auth.api.UserDto;
+import ru.nikbekhter.simple.store.api.AppError;
 import ru.nikbekhter.simple.store.auth.services.UsersProductsService;
 
 @RestController

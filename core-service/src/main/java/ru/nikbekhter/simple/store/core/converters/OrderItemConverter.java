@@ -1,7 +1,7 @@
 package ru.nikbekhter.simple.store.core.converters;
 
 import org.springframework.stereotype.Component;
-import ru.nikbekhter.simple.store.core.api.OrderItemDto;
+import ru.nikbekhter.simple.store.api.OrderItemDto;
 import ru.nikbekhter.simple.store.core.entities.OrderItem;
 
 @Component

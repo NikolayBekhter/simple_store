@@ -71,14 +71,6 @@ angular.module('store').controller('adminController', function ($scope, $http, $
             });
     };
 
-    $scope.notConfirmed = function () {
-        $http.get(contextPathCore + 'org/not_confirmed')
-            .then(function (response) {
-                $scope.notConfirmedOrg = response.data;
-                console.log(response.data);
-            });
-    };
-
     $scope.upUsersBalance = function () {
         $http.post(contextPathAuth + 'users/up_balance', $scope.user_up)
             .then(function successCallback(response) {
@@ -89,11 +81,20 @@ angular.module('store').controller('adminController', function ($scope, $http, $
     };
 
     $scope.sendMessage = function () {
-        $http.post(contextPathAuth + 'users/message', $scope.users_msg)
+        $http.post(contextPathAuth + 'users/notification', $scope.users_msg)
             .then(function (response) {
-                alert('Сообщение отправлено!');
-                $scope.users_msg.recipient = null;
-                $scope.users_msg.message = null;
+                alert('Уведомление отправлено!');
+                $scope.users_msg.sendTo = null;
+                $scope.users_msg.title = null;
+                $scope.users_msg.content = null;
+            });
+    };
+
+    $scope.notConfirmed = function () {
+        $http.get(contextPathCore + 'org/not_confirmed')
+            .then(function (response) {
+                $scope.notConfirmedOrg = response.data;
+                $scope.isUnconfirmedOrg = true;
             });
     };
 
@@ -105,11 +106,18 @@ angular.module('store').controller('adminController', function ($scope, $http, $
             });
     };
 
+    $scope.findAllOrg = function () {
+        $http.get(contextPathCore + 'org')
+            .then(function (response) {
+                $scope.orgList = response.data;
+            });
+    };
+
     $scope.notConfirmedProduct = function () {
         $http.get(contextPathCore + 'products/not_confirmed')
             .then(function (response) {
                 $scope.notConfirmedProd = response.data;
-                console.log(response.data);
+                $scope.isUnconfirmedProd = true;
             });
     };
 
@@ -117,13 +125,19 @@ angular.module('store').controller('adminController', function ($scope, $http, $
         $http.get(contextPathCore + 'products/confirm/' + title)
             .then(function (response) {
                 alert('Продукт успешно одобрен.');
-                $scope.notConfirmed();
+                $scope.notConfirmedProduct();
             });
     };
 
+    $scope.orgBun = function (id) {
+        $http.get(contextPathCore + 'org/bun/' + id)
+            .then(function (response) {
+                $scope.findAllOrg();
+            });
+    };
+
+    $scope.findAllOrg();
     $scope.getUsers();
-    $scope.notConfirmedProduct();
-    $scope.notConfirmed();
     $scope.loadAllHistory();
     $rootScope.loadProducts();
 

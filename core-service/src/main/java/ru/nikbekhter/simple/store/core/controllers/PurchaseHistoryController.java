@@ -2,9 +2,8 @@ package ru.nikbekhter.simple.store.core.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.core.api.PurchaseHistoryDto;
+import ru.nikbekhter.simple.store.api.PurchaseHistoryDto;
 import ru.nikbekhter.simple.store.core.converters.PurchaseHistoryConverter;
-import ru.nikbekhter.simple.store.core.entities.PurchaseHistory;
 import ru.nikbekhter.simple.store.core.servises.PurchaseHistoryService;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package ru.nikbekhter.simple.store.cart.converters;
 
 import org.springframework.stereotype.Component;
-import ru.nikbekhter.simple.store.cart.api.CartItemDto;
+import ru.nikbekhter.simple.store.api.CartItemDto;
 import ru.nikbekhter.simple.store.cart.model.CartItem;
 
 @Component

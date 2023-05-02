@@ -10,8 +10,6 @@ angular.module('store').controller('authController', function ($scope, $http, $l
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.simpleUser = {username: $scope.user.username, token: response.data.token};
-                    console.log($scope.user.username)
-                    console.log($localStorage.simpleUser.username)
 
                     $scope.user.username = null;
                     $scope.user.password = null;

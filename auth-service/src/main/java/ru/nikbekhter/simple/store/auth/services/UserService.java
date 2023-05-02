@@ -7,10 +7,12 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nikbekhter.simple.store.auth.api.ResourceNotFoundException;
-import ru.nikbekhter.simple.store.auth.api.UserDto;
+import ru.nikbekhter.simple.store.api.NotificationDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.UserDto;
 import ru.nikbekhter.simple.store.auth.entities.Role;
 import ru.nikbekhter.simple.store.auth.entities.User;
+import ru.nikbekhter.simple.store.auth.mail.MyMailSender;
 import ru.nikbekhter.simple.store.auth.repositories.UserRepository;
 
 import java.math.BigDecimal;
@@ -23,6 +25,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleService roleService;
+    private final MyMailSender myMailSender;
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmailIgnoreCase(email);
@@ -82,6 +85,28 @@ public class UserService implements UserDetailsService {
         userRepository.save(owner);
     }
 
+    public void refundProfit(UserDto userDto) {
+        User owner = userRepository.findByEmailIgnoreCase(userDto.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + userDto.getEmail() + " не найден!"));
+        User admin = userRepository.findByEmailIgnoreCase("n.v.bekhter@mail.ru").get();
+        if (owner.getBalance().compareTo(userDto.getBalance().subtract(userDto.getBalance().multiply(new BigDecimal("0.05")))) < 0) {
+            BigDecimal flaw = (userDto.getBalance().subtract(userDto.getBalance().multiply(new BigDecimal("0.05")))).subtract(owner.getBalance());
+            if (owner.isActive()) {
+                owner.setActive(false);
+            }
+            NotificationDto notification = new NotificationDto();
+            notification.setTitle("Обнаружена задолжность!!!");
+            notification.setContent("В процессе возврата средств за ранее приобретенный товар Вашей организации, на Вашем счете " +
+                    "оказалось недостаточно средств в размере: " + flaw + ". Ваш аккаунт заблокирован. Необходимо связаться с администратором n.v.bekhter@mail.ru !");
+            notification.setSendTo(owner.getEmail());
+            myMailSender.sendMailNotification(notification);
+        }
+        owner.setBalance(owner.getBalance().subtract(userDto.getBalance().subtract(userDto.getBalance().multiply(new BigDecimal("0.05")))));
+        admin.setBalance(admin.getBalance().subtract(userDto.getBalance().multiply(new BigDecimal("0.05"))));
+        userRepository.save(admin);
+        userRepository.save(owner);
+    }
+
     public User upBalance(UserDto userDto) {
         User user = userRepository.findByEmailIgnoreCase(userDto.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + userDto.getEmail() + " не найден!"));
@@ -98,5 +123,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id: " + id + " не найден!"));
         user.setActive(!user.isActive());
         userRepository.save(user);
+    }
+
+    public User refundPayment(User user, BigDecimal totalPrice) {
+        user.setBalance(user.getBalance().add(totalPrice));
+        return userRepository.save(user);
     }
 }

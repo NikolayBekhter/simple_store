@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.core.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.core.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ProductDto;
 import ru.nikbekhter.simple.store.core.entities.Product;
 
 @Service
@@ -10,17 +10,15 @@ import ru.nikbekhter.simple.store.core.entities.Product;
 public class ProductConverter {
 
     public ProductDto entityToDto(Product product) {
-        return ProductDto.builder()
-                .id(product.getId())
-                .title(product.getTitle())
-                .description(product.getDescription())
-                .organizationTitle(product.getOrganization().getTitle())
-                .price(product.getPrice())
-                .quantity(product.getQuantity())
-                .isConfirmed(product.isConfirmed())
-                .discount(product.getDiscount())
-                .review(product.getReview())
-                .build();
+        ProductDto dto = new ProductDto();
+        dto.setId(product.getId());
+        dto.setTitle(product.getTitle());
+        dto.setDescription(product.getDescription());
+        dto.setOrganizationTitle(product.getOrganization().getTitle());
+        dto.setPrice(product.getPrice());
+        dto.setQuantity(product.getQuantity());
+        dto.setConfirmed(product.isConfirmed());
+        return dto;
     }
 
     public Product dtoToEntity(ProductDto productDto) {

@@ -3,18 +3,15 @@ package ru.nikbekhter.simple.store.core.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.nikbekhter.simple.store.core.api.OrganizationDto;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.OrganizationDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrganizationConverter;
 import ru.nikbekhter.simple.store.core.servises.OrganizationService;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,5 +46,15 @@ public class OrganizationController {
     @GetMapping("/confirm/{title}")
     public void confirm(@PathVariable String title) {
         organizationService.confirm(title);
+    }
+
+    @GetMapping
+    public List<OrganizationDto> findAll() {
+        return organizationService.findAll();
+    }
+
+    @GetMapping("/bun/{id}")
+    public void orgBun(@PathVariable Long id) {
+        organizationService.orgBun(id);
     }
 }

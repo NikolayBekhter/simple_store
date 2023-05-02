@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
 @Table(name = "notifications")
 public class Notification {
@@ -24,6 +23,6 @@ public class Notification {
     private LocalDateTime createdAt;
     @Column(name = "content")
     private String content;
-    @Column(name = "username")
-    private String username;
+    @Column(name = "send_to")
+    private String sendTo;
 }

@@ -5,8 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.core.api.OrderDto;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.OrderDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrderConverter;
 import ru.nikbekhter.simple.store.core.servises.OrderService;
 
@@ -42,6 +42,16 @@ public class OrderController {
     @GetMapping("/payment/{orderId}")
     public void payment(@RequestHeader String username, @PathVariable Long orderId) throws ResourceNotFoundException {
         orderService.payment(username, orderId);
+    }
+
+    @GetMapping("/is_refund/{orderId}")
+    public boolean isRefundOrder(@PathVariable Long orderId) {
+        return orderService.isRefundOrder(orderId);
+    }
+
+    @GetMapping("/refund/{orderId}")
+    public void refundOrder(@RequestHeader String username, @PathVariable Long orderId) {
+        orderService.refundPayment(username, orderId);
     }
 
     @ExceptionHandler({ResourceNotFoundException.class})

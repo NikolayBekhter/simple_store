@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.nikbekhter.simple.store.core.api.OrganizationDto;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.OrganizationDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.OrganizationConverter;
 import ru.nikbekhter.simple.store.core.entities.Logo;
 import ru.nikbekhter.simple.store.core.entities.Organization;
@@ -14,6 +14,7 @@ import ru.nikbekhter.simple.store.core.utils.MyQueue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -69,5 +70,25 @@ public class OrganizationService {
         Organization organization = repository.findByTitleIgnoreCase(title).get();
         organization.setActive(true);
         repository.save(organization);
+    }
+
+    public List<OrganizationDto> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(organizationConverter::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    public void orgBun(Long id) {
+        Organization organization = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Организация с id: " + id + " не найдена!"));
+        organization.setActive(!organization.isActive());
+        repository.save(organization);
+    }
+
+    public boolean isOrgBun(String title) {
+        Organization organization = repository.findByTitleIgnoreCase(title)
+                .orElseThrow(() -> new ResourceNotFoundException("Организация с названием: " + title + " не найдена."));
+        return organization.isActive();
     }
 }

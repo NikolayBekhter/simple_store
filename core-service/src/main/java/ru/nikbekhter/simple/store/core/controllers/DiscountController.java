@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.core.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.core.api.DiscountDto;
+import ru.nikbekhter.simple.store.api.DiscountDto;
 import ru.nikbekhter.simple.store.core.entities.Product;
 import ru.nikbekhter.simple.store.core.servises.DiscountService;
 

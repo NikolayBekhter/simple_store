@@ -9,13 +9,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.auth.entities.Role;
-import ru.nikbekhter.simple.store.auth.services.UserService;
+import ru.nikbekhter.simple.store.api.*;
 import ru.nikbekhter.simple.store.auth.converters.UserConverter;
+import ru.nikbekhter.simple.store.auth.entities.Role;
 import ru.nikbekhter.simple.store.auth.entities.User;
 import ru.nikbekhter.simple.store.auth.mail.MyMailSender;
+import ru.nikbekhter.simple.store.auth.services.UserService;
 import ru.nikbekhter.simple.store.auth.utils.JwtTokenUtil;
-import ru.nikbekhter.simple.store.auth.api.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -97,9 +97,9 @@ public class AuthController {
         return userConverter.entityToDto(userService.upBalance(userDto));
     }
 
-    @PostMapping("/users/message")
-    public void sendMessage(@RequestBody MessageDto messageDto) {
-        myMailSender.sendMailMessage(messageDto);
+    @PostMapping("/users/notification")
+    public void sendNotification(@RequestBody NotificationDto notificationDto) {
+        myMailSender.sendMailNotification(notificationDto);
     }
 
     @GetMapping("/users/get_roles/{username}")
@@ -117,8 +117,20 @@ public class AuthController {
         return ResponseEntity.ok(userService.payment(user, totalPrice));
     }
 
+    @GetMapping("/users/refund/{total_price}")
+    public ResponseEntity<?> refundPayment(@RequestHeader(name = "username") String username, @PathVariable (name = "total_price") BigDecimal totalPrice) {
+        User user = userService.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с email: " + username + " не найден!"));
+        return ResponseEntity.ok(userService.refundPayment(user, totalPrice));
+    }
+
     @PostMapping("/users/change_balance")
     public void receivingProfit(@RequestBody UserDto userDto) {
         userService.receivingProfit(userDto);
+    }
+
+    @PostMapping("/users/decrease_balance")
+    public void refundProfit(@RequestBody UserDto userDto) {
+        userService.refundProfit(userDto);
     }
 }
