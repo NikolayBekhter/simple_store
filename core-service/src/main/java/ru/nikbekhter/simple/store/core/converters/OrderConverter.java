@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.core.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.nikbekhter.simple.store.core.api.OrderDto;
+import ru.nikbekhter.simple.store.api.OrderDto;
 import ru.nikbekhter.simple.store.core.entities.Order;
 
 import java.time.format.DateTimeFormatter;

@@ -21,6 +21,7 @@ public class LogoController {
 
     @GetMapping("/{title}")
     public ResponseEntity<?> getLogoByTitleOrganization(@PathVariable String title) {
+        System.out.println(title);
         Logo logo = organizationService.findLogoByTitleOrganization(title);
         return ResponseEntity.ok()
                 .header("fileName", logo.getOriginalFileName())

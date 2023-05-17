@@ -8,10 +8,14 @@
             <HR>
             <div>
                 <h3>Модерация организаций</h3>
-                <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <table class="table table-hover" cellpadding="0" cellspacing="0" ng-show="isUnconfirmedOrg">
+                    <button class="btn btn-success" ng-click="notConfirmed()" ng-show="!isUnconfirmedOrg">
+                        Проверить есть ли организации для подтверждения
+                    </button>
                     <tr>
                         <td>Владелец</td>
                         <td>Организация</td>
+                        <td>Логотип</td>
                         <td>Описание</td>
                         <td>Действие</td>
                     </tr>
@@ -19,6 +23,8 @@
                     <tr>
                         <td>{{notConfirmedOrg.owner}}</td>
                         <td>{{notConfirmedOrg.title}}</td>
+                        <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{notConfirmedOrg.title}}"
+                                 alt="лого" width="60" height="60"></td>
                         <td>{{notConfirmedOrg.description}}</td>
                         <td>
                             <button class="btn btn-success" ng-click="confirmedOrg(notConfirmedOrg.title)">Одобрить
@@ -31,10 +37,13 @@
             </div>
             <HR>
             <div>
-                <h3>Модерация продуктов</h3>
-                <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <h3>Модерация товаров</h3>
+                <table class="table table-hover" cellpadding="0" cellspacing="0" ng-show="isUnconfirmedProd">
+                    <button class="btn btn-success" ng-click="notConfirmedProduct()" ng-show="!isUnconfirmedProd">
+                        Проверить есть ли товары для подтверждения
+                    </button>
                     <tr>
-                        <td>Название продукта</td>
+                        <td>Название товара</td>
                         <td>Организация</td>
                         <td>Описание</td>
                         <td>Цена</td>
@@ -52,7 +61,7 @@
                             <button class="btn btn-success" ng-click="confirmedProduct(notConfirmedProd.title)">
                                 Одобрить
                             </button>
-                            <button class="btn btn-danger" ng-click="notConfirmedProduct()">Следующий продукт</button>
+                            <button class="btn btn-danger" ng-click="notConfirmedProduct()">Следующий товар</button>
                         </td>
                     </tr>
                     </tbody>
@@ -61,20 +70,28 @@
             <HR>
             <div>
                 <form ng-submit="sendMessage()">
-                    <h5>Отправить сообщение</h5>
+                    <h5>Отправить уведомление</h5>
                     <div class="form-group">
-                        <label for="users_msg_email">Email</label>
+                        <label for="users_msg_email">Кому</label>
                         <input type="text" class="form-control" id="users_msg_email" placeholder="Email"
-                               ng-model="users_msg.recipient">
+                               ng-model="users_msg.sendTo">
                     </div>
                     <div class="form-group">
-                        <label for="users_msg">Сообщение</label>
-                        <input type="text" class="form-control" id="users_msg" placeholder="Сообщение"
-                               ng-model="users_msg.message">
+                        <label for="users_msg_title">Заголовок</label>
+                        <input type="text" class="form-control" id="users_msg_title" placeholder="Заголовок"
+                               ng-model="users_msg.title">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group col-md-6">
+                            <label for="users_msg">Сообщение</label>
+                            <textarea class="form-control" id="users_msg" placeholder="Сообщение" cols="40" rows="3"
+                                      ng-model="users_msg.content"></textarea>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-success">Отправить</button>
                 </form>
             </div>
+            <HR>
             <table class="table table-hover" cellpadding="0" cellspacing="0">
                 <h3>Пользователи</h3>
                 <tr>
@@ -94,6 +111,32 @@
                     <td>{{user.active}}</td>
                     <td>
                         <button class="btn btn-danger" ng-click="userBun(user.id)">Бан</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <HR>
+            <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <h3>Список организаций</h3>
+                <tr>
+                    <td>ID</td>
+                    <td>Название</td>
+                    <td>Логотип</td>
+                    <td>Описание</td>
+                    <td>Владелец</td>
+                    <td>Active</td>
+                    <td>Действие</td>
+                </tr>
+                <tbody>
+                <tr ng-repeat="o in orgList">
+                    <td>{{o.id}}</td>
+                    <td>{{o.title}}</td>
+                    <td><img src="http://localhost:8183/simple-store-core/api/v1/logo/{{o.title}}" alt="лого" width="60" height="60"></td>
+                    <td>{{o.description}}</td>
+                    <td>{{o.owner}}</td>
+                    <td>{{o.active}}</td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="orgBun(o.id)">Бан</button>
                     </td>
                 </tr>
                 </tbody>
@@ -156,23 +199,46 @@
                         <p></p>
                         <button type="submit" class="btn btn-primary">Сохранить/изменить продукт</button>
                     </form>
-                    <HR>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-normal mb-0 text-black">Каталог товаров</h3>
-                    </div>
                     <div class="card-body p-4">
                         <div>
+                            <HR>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-normal mb-0 text-black">История покупок всех пользователей</h3>
+                            </div>
+                            <div class="card-body p-4">
+                                <div>
+                                    <p></p>
+                                    <table class="table table-hover" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>ID</td>
+                                            <td>Пользователь</td>
+                                            <td>Название продукта</td>
+                                            <td>Организация</td>
+                                            <td>Колличество</td>
+                                            <td>Дата покупки</td>
+                                        </tr>
+                                        <tbody>
+                                        <tr ng-repeat="h in allHistoryList">
+                                            <td>{{h.id}}</td>
+                                            <td>{{h.email}}</td>
+                                            <td>{{h.productTitle}}</td>
+                                            <td>{{h.organization}}</td>
+                                            <td>{{h.quantity}}</td>
+                                            <td>{{h.datePurchase}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <HR>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-normal mb-0 text-black">Каталог товаров</h3>
+                            </div>
                             <form novalidate ng-submit="loadProducts()">
                                 <div class="form-floating input-group-sm">
                                     <input type="text" class="form-control" id="filterTitle" placeholder=""
                                            ng-model="filter.title_part">
                                     <label for="filterTitle">Название продукта</label>
-                                </div>
-                                <p></p>
-                                <div class="form-floating input-group-sm">
-                                    <input type="text" class="form-control" id="filterOrgTitle" placeholder=""
-                                           ng-model="filter.org_title_part">
-                                    <label for="filterOrgTitle">Название организации</label>
                                 </div>
                                 <p></p>
                                 <div class="form-floating input-group-sm">
@@ -212,64 +278,19 @@
                                     <td>{{p.quantity}}</td>
                                     <td>
                                         <button class="btn btn-primary" ng-click="showProductInfo(p.id)">Инфо</button>
-                                        <!--                <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Удалить</button>-->
-                                        <button class="btn btn-success" ng-click="sendToCart(p.id)">Добавить в корзину
-                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
-                            <HR>
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h3 class="fw-normal mb-0 text-black">История покупок всех пользователей</h3>
-                            </div>
-                            <div class="card-body p-4">
-                                <div>
-                                    <p></p>
-                                    <table class="table table-hover" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Пользователь</td>
-                                            <td>Название продукта</td>
-                                            <td>Организация</td>
-                                            <td>Колличество</td>
-                                            <td>Дата покупки</td>
-                                        </tr>
-                                        <tbody>
-                                        <tr ng-repeat="h in allHistoryList">
-                                            <td>{{h.id}}</td>
-                                            <td>{{h.email}}</td>
-                                            <td>{{h.productTitle}}</td>
-                                            <td>{{h.organization}}</td>
-                                            <td>{{h.quantity}}</td>
-                                            <td>{{h.datePurchase}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <HR>
-                                    <nav aria-label="Page navigation" ng-show="isThereIndex()">
-                                        <ul class="pagination">
-                                            <li class="page-item" ng-show="ProductPage.page != 0">
-                                                <button class="page-link" ng-click="previousPage(ProductPage.page, 0)"
-                                                        aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </button>
-                                            </li>
-                                            <li class="page-item" ng-repeat="pageIndex in pagesList">
-                                                <button class="page-link" ng-click="loadProducts(pageIndex)">
-                                                    {{pageIndex}}
-                                                </button>
-                                            </li>
-                                            <li class="page-item" ng-show="ProductPage.page != (indexNumber - 1)">
-                                                <button class="page-link" ng-click="nextPage(ProductPage.page, 2)"
-                                                        aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
+                            <nav aria-label="Page navigation" ng-show="isThereIndex()">
+                                <ul class="pagination">
+                                    <li class="page-item" ng-repeat="pageIndex in pagesList">
+                                        <button class="page-link" ng-click="loadProducts(pageIndex)">
+                                            {{pageIndex}}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

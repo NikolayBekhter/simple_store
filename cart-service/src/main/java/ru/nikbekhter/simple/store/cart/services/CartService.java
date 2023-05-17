@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.cart.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ProductDto;
 import ru.nikbekhter.simple.store.cart.integrations.ProductServiceIntegration;
 import ru.nikbekhter.simple.store.cart.model.Cart;
 

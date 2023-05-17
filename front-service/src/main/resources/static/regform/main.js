@@ -1,8 +1,8 @@
 angular.module('store').controller('authController', function ($scope, $http, $localStorage, $location, $rootScope) {
     // использовать для локального подключения
-    // const contextPath = 'http://localhost:5555/auth/api/v1/';
+    const contextPath = 'http://localhost:5555/auth/api/v1/';
     // использовать для удаленного подключения
-    const contextPath = 'http://95.165.90.118:443/auth/api/v1/';
+    // const contextPath = 'http://95.165.90.118:443/auth/api/v1/';
 
     $scope.tryToAuth = function () {
         $http.post(contextPath + 'auth', $scope.user)

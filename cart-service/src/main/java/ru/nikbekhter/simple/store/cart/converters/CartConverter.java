@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.cart.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.nikbekhter.simple.store.cart.api.CartDto;
+import ru.nikbekhter.simple.store.api.CartDto;
 import ru.nikbekhter.simple.store.cart.model.Cart;
 
 import java.util.stream.Collectors;

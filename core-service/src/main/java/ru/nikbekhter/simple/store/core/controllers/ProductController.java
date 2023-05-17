@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.nikbekhter.simple.store.core.api.OrganizationDto;
-import ru.nikbekhter.simple.store.core.api.PageDto;
-import ru.nikbekhter.simple.store.core.api.ProductDto;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.PageDto;
+import ru.nikbekhter.simple.store.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
 import ru.nikbekhter.simple.store.core.converters.ProductConverter;
 import ru.nikbekhter.simple.store.core.entities.Product;
 import ru.nikbekhter.simple.store.core.servises.OrganizationService;
@@ -23,6 +22,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ProductConverter productConverter;
+    private final OrganizationService organizationService;
     private MyQueue<Product> productQueue = new MyQueue<>();
 
     @GetMapping
@@ -31,26 +31,24 @@ public class ProductController {
             @RequestParam(name = "min_price", required = false) Integer minPrice,
             @RequestParam(name = "max_price", required = false) Integer maxPrice,
 //            @RequestParam(name = "keyword_part", required = false) String keywordPart,
-            @RequestParam(name = "title_part", required = false) String titlePart,
-            @RequestParam(name = "org_title_part", required = false) String orgTitlePart
+            @RequestParam(name = "title_part", required = false) String titlePart
     ) {
         if (page < 1) {
             page = 1;
         }
 
-        Page<ProductDto> jpaPage = productService.find(minPrice, maxPrice, titlePart, orgTitlePart, page).map(
+        Page<ProductDto> jpaPage = productService.find(minPrice, maxPrice, titlePart, page).map(
                 productConverter::entityToDto
         );
         PageDto<ProductDto> out = new PageDto<>();
         out.setPage(jpaPage.getNumber());
-//        out.setItems(jpaPage.getContent());
         out.setTotalPages(jpaPage.getTotalPages());
         List<ProductDto> productDtos = new ArrayList<>();
         for (ProductDto productDto : jpaPage.getContent()) {
-            if (productDto.isConfirmed()) {
-                productDtos.add(productDto);
-            } else {
-                productQueue.enqueue(productConverter.dtoToEntity(productDto));
+            if (organizationService.isOrgBun(productDto.getOrganizationTitle())) {
+                if (productDto.isConfirmed()) {
+                    productDtos.add(productDto);
+                }
             }
         }
         out.setItems(productDtos);
@@ -64,8 +62,8 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto createOrUpdateProduct(@RequestBody ProductDto productDto) throws ResourceNotFoundException {
-        return productConverter.entityToDto(productService.saveOrUpdate(productDto));
+    public ProductDto createOrUpdateProduct(@RequestHeader String username, @RequestBody ProductDto productDto) throws ResourceNotFoundException {
+        return productConverter.entityToDto(productService.saveOrUpdate(productDto, username));
     }
 
     @GetMapping("/not_confirmed")

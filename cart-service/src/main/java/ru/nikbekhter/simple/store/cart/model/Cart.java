@@ -1,7 +1,7 @@
 package ru.nikbekhter.simple.store.cart.model;
 
 import lombok.Data;
-import ru.nikbekhter.simple.store.cart.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ProductDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

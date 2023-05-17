@@ -3,7 +3,7 @@ package ru.nikbekhter.simple.store.core.servises;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.core.api.DiscountDto;
+import ru.nikbekhter.simple.store.api.DiscountDto;
 import ru.nikbekhter.simple.store.core.entities.*;
 import ru.nikbekhter.simple.store.core.repositories.DiscountRepository;
 import ru.nikbekhter.simple.store.core.utils.ListsForDiscount;

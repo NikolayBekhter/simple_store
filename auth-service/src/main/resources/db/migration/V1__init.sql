@@ -8,6 +8,15 @@ create table users
     is_active   boolean
 );
 
+create table notifications
+(
+    id          bigserial primary key,
+    title       varchar(255),
+    created_at  timestamp default current_timestamp,
+    content     varchar(1000),
+    send_to     varchar(255)
+);
+
 create table roles
 (
     id          bigserial primary key,
@@ -22,14 +31,17 @@ create table users_roles
 );
 
 insert into users (email, password, username, balance, is_active) values
-    ('n.v.bekhter@mail.ru', '$2a$12$8jJ2aWY1jYu2fUTib.Ovuu7uiiodaPzHHExOSP9Ykm.lafgse9gim', 'Kolya', 100000, true);
+    ('n.v.bekhter@mail.ru', '$2a$12$8jJ2aWY1jYu2fUTib.Ovuu7uiiodaPzHHExOSP9Ykm.lafgse9gim', 'Kolya', 100000, true),
+    ('nik.noreply.b@mail.ru', '$2a$12$8jJ2aWY1jYu2fUTib.Ovuu7uiiodaPzHHExOSP9Ykm.lafgse9gim', 'Kolya', 100000, true);
 
 insert into roles (name) values
                              ('ROLE_USER'), ('ROLE_ADMIN');
 
 insert into users_roles (user_id, role_id) values
                                                (1, 1),
-                                               (1, 2);
+                                               (1, 2),
+                                               (2, 1),
+                                               (2, 2);
 
 create table reviews
 (
@@ -54,7 +66,7 @@ create table logo
     original_file_name  varchar(255),
     size                bigint,
     content_type        varchar(255),
-    bytes               oid
+    bytes               bytea
 );
 
 create table organizations

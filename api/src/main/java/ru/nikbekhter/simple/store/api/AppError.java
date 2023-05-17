@@ -1,4 +1,4 @@
-package ru.nikbekhter.simple.store.core.api;
+package ru.nikbekhter.simple.store.api;
 
 public class AppError {
     private int statusCode;

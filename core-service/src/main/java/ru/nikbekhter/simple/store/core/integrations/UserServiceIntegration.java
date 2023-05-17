@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
-import ru.nikbekhter.simple.store.core.api.UserDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.UserDto;
 
 import java.math.BigDecimal;
 
@@ -28,9 +28,47 @@ public class UserServiceIntegration {
                 .block();
     }
 
+    public void refundPayment(String username, BigDecimal totalPrice) {
+        userServiceWebClient.get()
+                .uri("api/v1/users/refund/" + totalPrice)
+                .header("username", username)
+                .retrieve()
+                .onStatus(
+                        httpStatus -> httpStatus.value() == HttpStatus.NOT_FOUND.value(),
+                        clientResponse -> Mono.error(new ResourceNotFoundException("Ошибка при возврате средств!"))
+                )
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public UserDto getUser(String username) {
+        return userServiceWebClient.get()
+                .uri("api/v1/users/is_active/" + username)
+                .retrieve()
+                .onStatus(
+                        httpStatus -> httpStatus.value() == HttpStatus.NOT_FOUND.value(),
+                        clientResponse -> Mono.error(new ResourceNotFoundException("Пользователь с таким именем не найдем в UserService!"))
+                )
+                .bodyToMono(UserDto.class)
+                .block();
+    }
+
     public void receivingProfit(UserDto userDto) {
         userServiceWebClient.post()
                 .uri("api/v1/users/change_balance")
+                .bodyValue(userDto)
+                .retrieve()
+                .onStatus(
+                        httpStatus -> httpStatus.value() == HttpStatus.NOT_FOUND.value(),
+                        clientResponse -> Mono.error(new ResourceNotFoundException("Произошла неизвестная ошибка!"))
+                )
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void refundProfit(UserDto userDto) {
+        userServiceWebClient.post()
+                .uri("api/v1/users/decrease_balance")
                 .bodyValue(userDto)
                 .retrieve()
                 .onStatus(

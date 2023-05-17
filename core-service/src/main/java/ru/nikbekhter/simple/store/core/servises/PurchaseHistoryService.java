@@ -2,7 +2,7 @@ package ru.nikbekhter.simple.store.core.servises;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.core.api.PurchaseHistoryDto;
+import ru.nikbekhter.simple.store.api.PurchaseHistoryDto;
 import ru.nikbekhter.simple.store.core.converters.PurchaseHistoryConverter;
 import ru.nikbekhter.simple.store.core.entities.PurchaseHistory;
 import ru.nikbekhter.simple.store.core.repositories.PurchaseHistoryRepository;
@@ -15,8 +15,8 @@ public class PurchaseHistoryService {
     private final PurchaseHistoryRepository repository;
     private final PurchaseHistoryConverter historyConverter;
 
-    public PurchaseHistory save(PurchaseHistoryDto historyDto) {
-        return repository.save(historyConverter.dtoToEntity(historyDto));
+    public void save(PurchaseHistoryDto historyDto) {
+        repository.save(historyConverter.dtoToEntity(historyDto));
     }
 
     public List<PurchaseHistory> findAll() {

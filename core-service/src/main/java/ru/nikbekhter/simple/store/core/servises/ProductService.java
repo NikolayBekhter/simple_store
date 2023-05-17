@@ -2,22 +2,19 @@ package ru.nikbekhter.simple.store.core.servises;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.nikbekhter.simple.store.core.api.ProductDto;
-import ru.nikbekhter.simple.store.core.api.ResourceNotFoundException;
-import ru.nikbekhter.simple.store.core.entities.Organization;
-import ru.nikbekhter.simple.store.core.entities.Product;
+import ru.nikbekhter.simple.store.api.ProductDto;
+import ru.nikbekhter.simple.store.api.ResourceNotFoundException;
+import ru.nikbekhter.simple.store.api.UserDto;
+import ru.nikbekhter.simple.store.core.entities.*;
+import ru.nikbekhter.simple.store.core.integrations.UserServiceIntegration;
 import ru.nikbekhter.simple.store.core.repositories.ProductRepository;
 import ru.nikbekhter.simple.store.core.repositories.specifications.ProductSpecifications;
-import ru.nikbekhter.simple.store.core.utils.IdentityMap;
-import ru.nikbekhter.simple.store.core.utils.MyQueue;
+import ru.nikbekhter.simple.store.core.utils.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,22 +22,20 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository repository;
     private final OrganizationService organizationService;
+    private final UserServiceIntegration userService;
     private IdentityMap identityMap = new IdentityMap();
     private MyQueue<Product> productQueue = new MyQueue<>();
 
-    public Page<Product> find(Integer minPrice, Integer maxPrice, String titlePart, String orgTitlePart, Integer page) {
+    public Page<Product> find(Integer minPrice, Integer maxPrice, String titlePart, Integer page) {
         Specification<Product> spec = Specification.where(null);
         if (minPrice != null) {
-            spec = spec.and(ProductSpecifications.costGreaterOrEqualsThan(minPrice));
+            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
         }
         if (maxPrice != null) {
-            spec = spec.and(ProductSpecifications.costLessOrEqualsThan(maxPrice));
+            spec = spec.and(ProductSpecifications.priceLessOrEqualsThan(maxPrice));
         }
         if (titlePart != null) {
             spec = spec.and(ProductSpecifications.titleLike(titlePart));
-        }
-        if (orgTitlePart != null) {
-            spec = spec.and(ProductSpecifications.orgTitleLike(orgTitlePart));
         }
 //        if (keywordPart != null) {
 //            spec = spec.and(ProductSpecifications.keywordLike(keywordPart));
@@ -66,7 +61,7 @@ public class ProductService {
         return null;
     }
 
-    public Product saveOrUpdate(ProductDto productDto) throws ResourceNotFoundException {
+    public Product saveOrUpdate(ProductDto productDto, String username) throws ResourceNotFoundException {
         if (productDto.getId() != null) {
             Product productFromBd = repository.findById(productDto.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + productDto.getId()));
@@ -89,9 +84,15 @@ public class ProductService {
             return repository.save(productFromBd);
         } else {
             Organization organization = organizationService.findByTitleIgnoreCase(productDto.getOrganizationTitle());
-//            System.out.println(organization);
             if (organization == null) {
                 throw new ResourceNotFoundException("Организация не прошла модерацию, попробуйте добавить продукт позже.");
+            }
+            if (!username.equalsIgnoreCase(organization.getOwner())) {
+                throw new ResourceNotFoundException("Только владелец компании может добавлять товары в магазин.");
+            }
+            UserDto userDto = userService.getUser(organization.getOwner());
+            if (!userDto.isActive()) {
+                throw new ResourceNotFoundException("Владелец организации забанен, обратитесь к администратору n.v.bekhter@mail.ru");
             }
             Product product = new Product();
             product.setId(productDto.getId());
